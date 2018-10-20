@@ -14,6 +14,7 @@
 	*- ändra färg på rektangel när man klickar på canvas, svart till rött till svart...
 	*- la till fpsOverlay
 	*- begränsa klickområde för rektangel till endast rektangel
+	- dela upp applikation på flera filer
 	- rita hela canvas med fyrkanter, med vit kant
 	- förbättra klick funktion om möjligt, nu klickas när musknappen släpps, inte trycks
 
@@ -44,109 +45,9 @@
 <body>
 <canvas id="prototypeCanvas" width="360" height="480" style="border:1px solid #000000;"></canvas>
 
-<script>
-/* Configuration */
-	var logLevelInfo = true; // aktivera eller inaktivera info-loggning till console
-	
-/* Global variables */
-	var c = document.getElementById("prototypeCanvas");
-	var ctx = c.getContext("2d");
 
-
-/* Objects and Functions */
-	function Mine(x, y, width, height, colour) { // Object Constructor
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.colour = colour;
-		// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
-		this.draw = function() {
-			this.drawAction();
-
-			ctx.fillStyle=this.colour;
-			ctx.fillRect(this.x, this.y, this.width, this.height);
-		}
-		this.drawAction = function () {
-			// do nothing
-		}
-		this.clickAction = function(clickPosX, clickPosY) {
-			// check if click is within rectangle area
-			if ( clickPosX > this.x && clickPosX < (this.x + this.height) ) {
-				if ( clickPosY > this.y && clickPosY < (this.y + this.width) ) {
-					// switch colour
-					if (this.colour == "#000000") { this.colour = "#FF0000"; }
-					else { this.colour = "#000000"; }
-				}
-			}
-		}
-	};
-
-	function FpsOverlay(x, y, colour) { // Object Constructor
-		this.x = x;
-		this.y = y;
-		this.colour = colour;
-		this.frameCounter = 0;
-		this.frameShow = 0;
-		this.draw = function() {
-			this.drawAction();
-
-			ctx.font = "11px Arial";
-			ctx.fillStyle = this.colour;
-			ctx.fillText( this.frameShow, this.x, this.y );
-			ctx.fillText( this.frameCounter, this.x, this.y + 10 );
-		}
-		this.drawAction = function () {
-			// update text each 6 frame => 1/100ms @60fps
-			// check frameShow first so it shows 1-10 instead of 0-9
-			if (this.frameShow % 10 == 0) {this.frameShow = 0;}
-			this.frameCounter++;
-			if (this.frameCounter % 6 == 0) {this.frameShow++;}
-		}
-		this.clickAction = function(clickPosX, clickPosY) {
-			// do nothing at click
-		}
-	};
-
-	function mainLoop() {
-		requestAnimationFrame(mainLoop);
-		ctx.clearRect(0,0,c.width,c.height);
-		
-		// draw all graphical objects
-		var arrayLength = graphObjects.length;
-		for (var i = 0; i < arrayLength; i++) {
-    		graphObjects[i].draw();
-		}
-	}
-
-/* Event listeners */
-	c.addEventListener("click", function canvasClicked(event) {
-		var clickPos = {
-			x: event.pageX - c.offsetLeft,
-			y: event.pageY - c.offsetTop
-		};
-		if (logLevelInfo) { console.log("[Info] canvasClicked, X = ", clickPos.x, ", Y = ", clickPos.y); }
-		
-		// call clickAction function of all graphical objects
-		var arrayLength = graphObjects.length;
-		for (var i = 0; i < arrayLength; i++) {
-    		graphObjects[i].clickAction(clickPos.x, clickPos.y);
-		}
-	}, false);
-
-
-/* Main */
-	if (logLevelInfo) { console.log("[Info] prototype, by Thavox"); }
-	
-	var graphObjects = [];
-	// graphical objects are drawn in order, last on top
-	graphObjects.push(new Rectangle(100, 100, 50, 50, "#000000"));
-	graphObjects.push(new FpsOverlay(300, 460, "#000000"));
-
-	if (logLevelInfo) { console.log("[Info] graphObjects length = ", graphObjects.length); }
-	
-	mainLoop();
-</script>
+<script src="prototypeGraphObjects.js" type="text/javascript"></script>
+<script src="prototypeMain.js" type="text/javascript"></script>
 
 </body>
 </html>
