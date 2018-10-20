@@ -17,8 +17,10 @@ function Rectangle(x, y, width, height) { // Object Constructor
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.colour = "#000000";
-
+	this.colour = "#808080";
+	this.state = "unset";
+	
+	// https://encycolorpedia.se/808080 (grå) https://encycolorpedia.se/cd5c5c (kastanj)- underbar sida med RGB koder för färger
 	// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
 	this.draw = function() {
 		this.drawAction();
@@ -33,14 +35,27 @@ function Rectangle(x, y, width, height) { // Object Constructor
 
 	this.clickAction = function( clickPosX, clickPosY ) {
 		// check if click is within rectangle area
-		if ( clickPosX > this.x && clickPosX < (this.x + this.height) ) {
-			if ( clickPosY > this.y && clickPosY < (this.y + this.width) ) {
-				
-				// switch colour
-				if (this.colour == "#000000") { this.colour = "#FF0000"; }
-				else { this.colour = "#000000"; }
-				
+		if ( this.posWithinRectangle( clickPosX, clickPosY, this.x, this.x+this.width, this.y, this.y+this.height )) {
+			// switch state and colour
+			if ( this.state == "on" ) {
+				this.state = "off";
+				this.colour = "#cd5c5c";
 			}
+			else {
+				this.state = "on";
+				this.colour = "#f5f5dc";
+			}
+		}
+	}
+	
+	this.posWithinRectangle = function( xPos, yPos, xRectLeft, xRectRight, yRectTop, yRectBottom ) {
+		if ( xPos > xRectLeft && xPos < xRectRight ) {
+			if ( yPos > yRectTop && yPos < yRectBottom ) {
+				return true;
+			}
+		}
+		else {
+			return false;
 		}
 	}
 };
@@ -48,7 +63,7 @@ function Rectangle(x, y, width, height) { // Object Constructor
 function FpsOverlay(x, y) { // Object Constructor
 	this.x = x;
 	this.y = y;
-	this.colour = "#000000";
+	this.colour = "#000000"; // svart
 	this.frameCounter = 0;
 	this.frameShow = 0;
 
