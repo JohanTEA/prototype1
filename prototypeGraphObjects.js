@@ -12,21 +12,22 @@
 		- is called by event listener when a click occurs
 */
 
-function Rectangle(x, y, width, height) { // Object Constructor
+/**
+ * Background at x,y with width,height.
+ * @constructor
+ */
+function Background(x, y, width, height) { // Object Constructor
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.colour = "#808080";
-	this.state = "unset";
-	
-	// https://encycolorpedia.se/808080 (grå) https://encycolorpedia.se/cd5c5c (kastanj)- underbar sida med RGB koder för färger
-	// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
+	this.colour = "#50c878"; // smaragdgrön
+
 	this.draw = function() {
 		this.drawAction();
 		
-		ctx.fillStyle = this.colour;
-		ctx.fillRect( this.x, this.y, this.width, this.height );
+		CTX.fillStyle = this.colour;
+		CTX.fillRect( this.x, this.y, this.width, this.height );
 	}
 
 	this.drawAction = function () {
@@ -34,18 +35,99 @@ function Rectangle(x, y, width, height) { // Object Constructor
 	}
 
 	this.clickAction = function( clickPosX, clickPosY ) {
-		// check if click is within rectangle area
+		// do nothing
+	}
+};
+
+/**
+ * Top menu at x,y with width,height.
+ * @constructor
+ */
+function Topmenu(x, y, width, height) { // Object Constructor
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.colour = "#7fffd4"; // aquamarine
+
+	this.draw = function() {
+		this.drawAction();
+		
+		CTX.fillStyle = this.colour;
+		CTX.fillRect( this.x, this.y, this.width, this.height );
+	}
+
+	this.drawAction = function () {
+		// do nothing
+	}
+
+	this.clickAction = function( clickPosX, clickPosY ) {
+		// do nothing
+	}
+};
+
+
+/**
+ * Mine square at x,y with width,height.
+ * mine is true || false
+ * @constructor
+ */
+function Mine(x, y, width, height, mine) { // Object Constructor
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.colour = "#808080";
+	this.state = "unknown";
+	this.mine = mine;
+	
+	// https://encycolorpedia.se/808080 (grå) https://encycolorpedia.se/cd5c5c (kastanj)- underbar sida med RGB koder för färger
+	// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
+	this.draw = function() {
+		this.drawAction();
+
+		CTX.fillStyle = this.colour;
+		CTX.fillRect( this.x, this.y, this.width, this.height );
+	}
+
+	this.drawAction = function () {
+		switch(this.state) {
+			case "unknown":
+				// todo: show that this area is not explored 
+				this.colour = "#808080"; // grey
+				break;
+			case "noMine":
+				// todo: show transparent = background
+				// todo: show number for neighbouring mines
+				this.colour = "#ffffff"; // white
+				break;
+			case "mineBlocked":
+				// todo: show that a mine have been disarmed/blocked
+				this.colour = "#cd5c5c"; // kastanj				
+				break;
+			case "mine":
+				// todo: end game animation - do freaky explosion animation for 2 seconds here!
+				this.colour = "#000000"; // black				
+				break;
+			default: // purple colour for error indication
+				this.colour = "#ff00ff";
+		}
+	}
+
+	this.clickAction = function( clickPosX, clickPosY, play ) {
+		var endGame = false;
+		if ( play == false ) { return endGame; } // if game is paused, do nothing
+
 		if ( this.posWithinRectangle( clickPosX, clickPosY, this.x, this.x+this.width, this.y, this.y+this.height )) {
-			// switch state and colour
-			if ( this.state == "on" ) {
-				this.state = "off";
-				this.colour = "#cd5c5c";
+			if ( this.state == "unknown" && !(this.mine) ) { 
+				this.state = "noMine";
 			}
 			else {
-				this.state = "on";
-				this.colour = "#f5f5dc";
+				this.state = "mine";
+				endGame = true;
 			}
 		}
+		return endGame;
 	}
 	
 	this.posWithinRectangle = function( xPos, yPos, xRectLeft, xRectRight, yRectTop, yRectBottom ) {
@@ -60,6 +142,10 @@ function Rectangle(x, y, width, height) { // Object Constructor
 	}
 };
 
+/**
+ * FPS overlay at x, y.
+ * @constructor
+ */
 function FpsOverlay(x, y) { // Object Constructor
 	this.x = x;
 	this.y = y;
@@ -70,10 +156,10 @@ function FpsOverlay(x, y) { // Object Constructor
 	this.draw = function() {
 		this.drawAction();
 		
-		ctx.font = "11px Arial";
-		ctx.fillStyle = this.colour;
-		ctx.fillText( this.frameShow, this.x, this.y );
-		ctx.fillText( this.frameCounter, this.x, this.y + 10 );
+		CTX.font = "11px Arial";
+		CTX.fillStyle = this.colour;
+		CTX.fillText( this.frameShow, this.x, this.y );
+		CTX.fillText( this.frameCounter, this.x, this.y + 10 );
 	}
 
 	this.drawAction = function () {

@@ -4,9 +4,12 @@
 var logLevelInfo = true; // aktivera eller inaktivera info-loggning till console
 	
 /* Global variables */
-var c = document.getElementById("prototypeCanvas");
-var ctx = c.getContext("2d");
-var graphObjects = [];
+// only use these in the main loop
+var C = document.getElementById("prototypeCanvas");
+var CTX = C.getContext("2d");
+var GRAPHOBJECTS = [];
+var PLAY = true;
+var ENDGAME = false;
 
 
 /* Logging */
@@ -16,16 +19,19 @@ function logInfo(logtext) {
 
 
 /* Listen for click on canvas */
-c.addEventListener( "click", function canvasClicked(event) {
+C.addEventListener( "click", function canvasClicked(event) {
 	var clickPos = {
-		x: event.pageX - c.offsetLeft,
-		y: event.pageY - c.offsetTop };
+		x: event.pageX - C.offsetLeft,
+		y: event.pageY - C.offsetTop };
 	logInfo("canvasClicked, X = " + clickPos.x + ", Y = " + clickPos.y );
 
 	// call clickAction() of all graphical objects
-	var arrayLength = graphObjects.length;
+	var arrayLength = GRAPHOBJECTS.length;
 	for ( var i = 0; i < arrayLength; i++ ) {
-   		graphObjects[i].clickAction( clickPos.x, clickPos.y );
+   		if ( GRAPHOBJECTS[i].clickAction( clickPos.x, clickPos.y, PLAY )) { // clickAction returns true or false, if true then end game
+			ENDGAME = true;
+			PLAY = false; // stop game interaction for end-game animation
+		   }
 	}
 }, false);
 
@@ -35,10 +41,10 @@ function mainLoop() {
 	requestAnimationFrame( mainLoop );
 
 	// clear canvas and draw all graphical objects
-	ctx.clearRect( 0, 0, c.width, c.height );
-	var arrayLength = graphObjects.length;
+	CTX.clearRect( 0, 0, C.width, C.height );
+	var arrayLength = GRAPHOBJECTS.length;
 	for (var i = 0; i < arrayLength; i++) {
-   		graphObjects[i].draw();
+   		GRAPHOBJECTS[i].draw();
 	}
 }
 
@@ -46,24 +52,55 @@ function mainLoop() {
 console.log("[Application started] Prototype, by JohanTEA");
 
 // Create graphical objects
-// Graphical objects are later drawn in order, with last object on top layer
-var rectWidth = 50;
-var rectHeight = 50;
-var rectPerRow = 7;
-var rectRowOffset = 5; // edge offset to center rectangles, pixels. TODO: förbättra så detta baseras på c.width, så rutorna centreras
-var rectPerColumn = 9;
-var rectColumnOffset = 13; // edge offset to center rectangles, pixels. TODO: förbättra så detta baseras på c.width, så rutorna centreras
-for ( var rectRow = 0; rectRow < rectPerRow; rectRow++ ) {
-	for ( var rectColumn = 0; rectColumn < rectPerColumn; rectColumn++ ) {
-   		graphObjects.push(
-			new Rectangle(
-				(rectRow*rectWidth)+rectRowOffset,
-				(rectColumn*rectHeight)+rectColumnOffset,
-				rectWidth,
-				rectHeight ));
+// Graphical objects are drawn in order, with last object on top layer
+
+/* Basic layout (360*480)
+---------------
+|Name     |R|I|  R=restart, I=info+config
+---------------
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+|X|X|X|X|X|X|X|
+---------------
+*/
+
+// Background
+GRAPHOBJECTS.push( new Background( 0, 0, C.width, C.height ));
+
+// Game name (top row)
+GRAPHOBJECTS.push( new Topmenu( 5, 5, 350, 70 )); 
+// Restart button (icon w. transparent background)
+//GRAPHOBJECTS.push( new RestartBtn( 50*5, 5, 50, 70 )); 
+// Info and config button (icon w. transparent background)
+//GRAPHOBJECTS.push( new InfoBtn( 50*6, 5, 50, 70 )); 
+
+
+// Mines
+var mineWidth = 50;
+var mineHeight = 50;
+var minePerRow = 7;
+var mineRowOffset = 5; // edge offset to center mines, pixels.
+var minePerColumn = 8;
+var mineColumnOffset = 75; // edge offset to center mines, pixels.
+for ( var mineRow = 0; mineRow < minePerRow; mineRow++ ) {
+	for ( var mineColumn = 0; mineColumn < minePerColumn; mineColumn++ ) {
+   		GRAPHOBJECTS.push(
+			new Mine(
+				(mineRow*mineWidth)+mineRowOffset,
+				(mineColumn*mineHeight)+mineColumnOffset,
+				mineWidth,
+				mineHeight,
+				Math.round(Math.random()) )); // generate random mines, 1 or 0
 	}
 }
-graphObjects.push( new FpsOverlay( 300, 460 ));
-logInfo( "graphObjects length = " + graphObjects.length );
+
+// Overlay
+GRAPHOBJECTS.push( new FpsOverlay( 300, 460 ));
+logInfo( "GRAPHOBJECTS length = " + GRAPHOBJECTS.length );
 
 mainLoop();
