@@ -87,7 +87,8 @@ function Mine(x, y, width, height, mine) { // Object Constructor
 		drawAction();
 
 		canvasContext.fillStyle = colour;
-		canvasContext.fillRect( this.x, this.y, this.width, this.height );
+		var rectEdge = 2;
+		canvasContext.fillRect( this.x+rectEdge, this.y+rectEdge, this.width-rectEdge, this.height-rectEdge );
 	}
 
 	var drawAction = function () {
