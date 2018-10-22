@@ -44,12 +44,12 @@ function mainLoop() {
 	CTX.clearRect( 0, 0, C.width, C.height );
 	var arrayLength = GRAPHOBJECTS.length;
 	for (var i = 0; i < arrayLength; i++) {
-   		GRAPHOBJECTS[i].draw();
+   		GRAPHOBJECTS[i].draw(CTX);
 	}
 }
 
 /* Main */
-console.log("[Application started] Prototype, by JohanTEA");
+console.log("[Application started] Prototype1, by JohanTEA");
 
 // Create graphical objects
 // Graphical objects are drawn in order, with last object on top layer
@@ -101,6 +101,7 @@ for ( var mineRow = 0; mineRow < minePerRow; mineRow++ ) {
 
 // Overlay
 GRAPHOBJECTS.push( new FpsOverlay( 300, 460 ));
+
 logInfo( "GRAPHOBJECTS length = " + GRAPHOBJECTS.length );
 
 mainLoop();

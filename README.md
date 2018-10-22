@@ -3,30 +3,36 @@ Mine sweeper type game written in Javascript
 
 ###############
 ## TODO Fix
-- använd inte CTX som global variabel i grafikobjekten, ta den som input. "ful-kodat" nu
 - gör canvas utan kanter
 - förbättra klick funktion om möjligt, nu klickas när musknappen släpps, inte trycks
 
 
 ###############
-## Plan
+## Plan / arbetslogg
 *- skapa dokument
 *- rita en fyrkant
 *- använd animationFrame
 *- gör canvas klickbar och spara läge
-*- refaktorering till objekt som sparas i en matris
+*- snyggade till kod
+	- refaktorisering till objekt som sparas i en matris
 *- ändra färg på rektangel när man klickar på canvas, svart till rött till svart...
 *- la till fpsOverlay
 *- begränsa klickområde för rektangel till endast rektangel
-*- dela upp applikation på flera filer
+*- snyggade till kod
+	- delade upp applikation på flera filer
 *- rita hela canvas med fyrkanter
 *- ge spelrutor status, o-klickad som default
 *- ändra status på fyrkanterna när klick sker, o-klickad, klickad-ej-mina, klickad-blockerad-mina, klickad-mina
 *- visa spelrutor med olika färger beroende på status
 *- gör så rutorna kan ha egenskaperna bomb eller inte bomb
 *- randomisera minor
+*- snyggade till kod
+	- minimerade användning av globala variabler och objekt
+	- justerade objekt vad gäller private/public funktioner så endast nödvändinga delar kan nås utifrån objekten
+- gör Background med bild istället för färg. gräs, liten bild som multiplas (finns funktion i ctx img för detta)
+- animera Background (byt bild tre gånger per sekund? eller finns animations funktion?)
 - Lägg in övre rad med:
-	- spelnamn (3 rutor bred)
+	- spelnamn (5 rutor bred)
 	- knapp för "starta om" (1 ruta bred)
 	- i-infoknapp (1 ruta bred)
 - gör starta-om funktion
@@ -45,8 +51,14 @@ Mine sweeper type game written in Javascript
 	- vid klick på ej bomb: visa gräs, samt siffra för angränsande minor
 	- vid klick på bomb: visa tistel och avsluta med cool animation
 
-- lägg in ljud (loopa, skapa eget eller kopiera från EverydayAstronaut)
+- lägg in konfig för FpsOverlay av/på
+- spara all konfig (play on/off, ljud on/off, etc.) i ett objekt så all konfig blir lätt att komma åt
+- spara konfig på disk (cookies?)
+- lägg in ljud (loopa. skapa eget eller kopiera från EverydayAstronaut)
 - lägg in konfig för ljud av/på
+- lägg in ljudeffekter
+- lägg in konfig för ljudeffekter av/på
+
 
 - lägg upp spel på Google Play som FreeToPlay (v.1.0)
 

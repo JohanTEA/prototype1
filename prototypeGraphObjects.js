@@ -1,14 +1,14 @@
 /* Prototype - Graphical Objects */
 
 /* All graphical objects have the following functions:
-	* draw()
+	* this.draw()
 		- draws the object graphics
 		- is called by Main loop each frame
-	* drawAction()
+	* var drawAction()
 		- action performed by object each draw/frame (eg. animation)
 		- is only called by draw() internally in the object
-	* clickAction()
-		- action performed by object at click (eg. game event)
+	* this.clickAction()
+		- action performed by object at click
 		- is called by event listener when a click occurs
 */
 
@@ -21,20 +21,20 @@ function Background(x, y, width, height) { // Object Constructor
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.colour = "#50c878"; // smaragdgrön
+	var colour = "#50c878"; // smaragdgrön
 
-	this.draw = function() {
-		this.drawAction();
+	this.draw = function(canvasContext) {
+		drawAction();
 		
-		CTX.fillStyle = this.colour;
-		CTX.fillRect( this.x, this.y, this.width, this.height );
+		canvasContext.fillStyle = colour;
+		canvasContext.fillRect( this.x, this.y, this.width, this.height );
 	}
 
-	this.drawAction = function () {
+	var drawAction = function () {
 		// do nothing
 	}
 
-	this.clickAction = function( clickPosX, clickPosY ) {
+	this.clickAction = function( clickPosX, clickPosY, play ) {
 		// do nothing
 	}
 };
@@ -48,20 +48,20 @@ function Topmenu(x, y, width, height) { // Object Constructor
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.colour = "#7fffd4"; // aquamarine
+	var colour = "#7fffd4"; // aquamarine
 
-	this.draw = function() {
-		this.drawAction();
+	this.draw = function(canvasContext) {
+		drawAction();
 		
-		CTX.fillStyle = this.colour;
-		CTX.fillRect( this.x, this.y, this.width, this.height );
+		canvasContext.fillStyle = colour;
+		canvasContext.fillRect( this.x, this.y, this.width, this.height );
 	}
 
-	this.drawAction = function () {
+	var drawAction = function () {
 		// do nothing
 	}
 
-	this.clickAction = function( clickPosX, clickPosY ) {
+	this.clickAction = function( clickPosX, clickPosY, play ) {
 		// do nothing
 	}
 };
@@ -77,40 +77,41 @@ function Mine(x, y, width, height, mine) { // Object Constructor
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.colour = "#808080";
-	this.state = "unknown";
 	this.mine = mine;
+	var colour = "#ff00ff"; // purple colour for error indication
+	var state = "unknown";
 	
 	// https://encycolorpedia.se/808080 (grå) https://encycolorpedia.se/cd5c5c (kastanj)- underbar sida med RGB koder för färger
 	// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
-	this.draw = function() {
-		this.drawAction();
+	this.draw = function(canvasContext) {
+		drawAction();
 
-		CTX.fillStyle = this.colour;
-		CTX.fillRect( this.x, this.y, this.width, this.height );
+		canvasContext.fillStyle = colour;
+		canvasContext.fillRect( this.x, this.y, this.width, this.height );
 	}
 
-	this.drawAction = function () {
-		switch(this.state) {
+	var drawAction = function () {
+		switch(state) {
 			case "unknown":
 				// todo: show that this area is not explored 
-				this.colour = "#808080"; // grey
+				colour = "#808080"; // grey
 				break;
 			case "noMine":
 				// todo: show transparent = background
 				// todo: show number for neighbouring mines
-				this.colour = "#ffffff"; // white
+				colour = "#ffffff"; // white
 				break;
 			case "mineBlocked":
 				// todo: show that a mine have been disarmed/blocked
-				this.colour = "#cd5c5c"; // kastanj				
+				colour = "#cd5c5c"; // kastanj				
 				break;
 			case "mine":
 				// todo: end game animation - do freaky explosion animation for 2 seconds here!
-				this.colour = "#000000"; // black				
+				colour = "#000000"; // black				
 				break;
 			default: // purple colour for error indication
-				this.colour = "#ff00ff";
+				colour = "#ff00ff";
+				break;
 		}
 	}
 
@@ -118,19 +119,19 @@ function Mine(x, y, width, height, mine) { // Object Constructor
 		var endGame = false;
 		if ( play == false ) { return endGame; } // if game is paused, do nothing
 
-		if ( this.posWithinRectangle( clickPosX, clickPosY, this.x, this.x+this.width, this.y, this.y+this.height )) {
-			if ( this.state == "unknown" && !(this.mine) ) { 
-				this.state = "noMine";
+		if ( posWithinRectangle( clickPosX, clickPosY, this.x, this.x+this.width, this.y, this.y+this.height )) {
+			if ( state == "unknown" && !(this.mine) ) { 
+				state = "noMine";
 			}
 			else {
-				this.state = "mine";
+				state = "mine";
 				endGame = true;
 			}
 		}
 		return endGame;
 	}
 	
-	this.posWithinRectangle = function( xPos, yPos, xRectLeft, xRectRight, yRectTop, yRectBottom ) {
+	var posWithinRectangle = function( xPos, yPos, xRectLeft, xRectRight, yRectTop, yRectBottom ) {
 		if ( xPos > xRectLeft && xPos < xRectRight ) {
 			if ( yPos > yRectTop && yPos < yRectBottom ) {
 				return true;
@@ -149,28 +150,28 @@ function Mine(x, y, width, height, mine) { // Object Constructor
 function FpsOverlay(x, y) { // Object Constructor
 	this.x = x;
 	this.y = y;
-	this.colour = "#000000"; // svart
-	this.frameCounter = 0;
-	this.frameShow = 0;
+	var colour = "#000000"; // svart
+	var frameCounter = 0;
+	var frameShow = 0;
 
-	this.draw = function() {
-		this.drawAction();
+	this.draw = function(canvasContext) {
+		drawAction();
 		
-		CTX.font = "11px Arial";
-		CTX.fillStyle = this.colour;
-		CTX.fillText( this.frameShow, this.x, this.y );
-		CTX.fillText( this.frameCounter, this.x, this.y + 10 );
+		canvasContext.font = "11px Arial";
+		canvasContext.fillStyle = colour;
+		canvasContext.fillText( frameShow, this.x, this.y );
+		canvasContext.fillText( frameCounter, this.x, this.y + 10 );
 	}
 
-	this.drawAction = function () {
+	var drawAction = function () {
 		// update text each 6 frame => 1/100ms @60fps
 		// check frameShow first so it shows 1-10 instead of 0-9
-		if ( this.frameShow % 10 == 0 ) { this.frameShow = 0; }
-		this.frameCounter++;
-		if ( this.frameCounter % 6 == 0 ) { this.frameShow++; }
+		if ( frameShow % 10 == 0 ) { frameShow = 0; }
+		frameCounter++;
+		if ( frameCounter % 6 == 0 ) { frameShow++; }
 	}
 
-	this.clickAction = function( clickPosX, clickPosY ) {
+	this.clickAction = function( clickPosX, clickPosY, play ) {
 		// do nothing at click
 	}
 };
