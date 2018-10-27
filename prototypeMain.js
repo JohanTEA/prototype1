@@ -44,17 +44,15 @@ function mainLoop() {
 	CTX.clearRect( 0, 0, C.width, C.height );
 	var arrayLength = GRAPHOBJECTS.length;
 	for (var i = 0; i < arrayLength; i++) {
-   		GRAPHOBJECTS[i].draw(CTX);
+   		GRAPHOBJECTS[i].draw();
 	}
 }
 
 /* Main */
-console.log("[Application started] Prototype1, by JohanTEA");
+console.log("[Application start] Prototype1, by JohanTEA");
 
-// Create graphical objects
-// Graphical objects are drawn in order, with last object on top layer
-
-/* Basic layout (360*480)
+/* Game implementation info:
+Basic layout (360*480)
 ---------------
 |Name     |R|I|  R=restart, I=info+config
 ---------------
@@ -67,18 +65,27 @@ console.log("[Application started] Prototype1, by JohanTEA");
 |X|X|X|X|X|X|X|
 |X|X|X|X|X|X|X|
 ---------------
+
+Graphical objects are drawn in the same order as they are created.
+First object on bottom layer and last object on top layer.
+ */
+
+
+/* Top area:
+* - Game name
+* - Restart button
+* - Info/Config button
 */
+GRAPHOBJECTS.push( new Topmenu( CTX, 0, 0, 360, 70 )); 
+//GRAPHOBJECTS.push( new RestartBtn( CTX, 50*5, 5, 50, 70 )); 
+//GRAPHOBJECTS.push( new InfoBtn( CTX, 50*6, 5, 50, 70 )); 
 
-// Background
-GRAPHOBJECTS.push( new Background( 0, 0, C.width, C.height ));
 
-// Game name (top row)
-GRAPHOBJECTS.push( new Topmenu( 5, 5, 350, 70 )); 
-// Restart button (icon w. transparent background)
-//GRAPHOBJECTS.push( new RestartBtn( 50*5, 5, 50, 70 )); 
-// Info and config button (icon w. transparent background)
-//GRAPHOBJECTS.push( new InfoBtn( 50*6, 5, 50, 70 )); 
-
+/* Game area:
+* - Game background
+* - Mines
+*/
+GRAPHOBJECTS.push( new Background( CTX, 0, 70, C.width, C.height ));
 
 // Mines
 var mineWidth = 50;
@@ -91,6 +98,7 @@ for ( var mineRow = 0; mineRow < minePerRow; mineRow++ ) {
 	for ( var mineColumn = 0; mineColumn < minePerColumn; mineColumn++ ) {
    		GRAPHOBJECTS.push(
 			new Mine(
+				CTX,
 				(mineRow*mineWidth)+mineRowOffset,
 				(mineColumn*mineHeight)+mineColumnOffset,
 				mineWidth,
@@ -99,9 +107,14 @@ for ( var mineRow = 0; mineRow < minePerRow; mineRow++ ) {
 	}
 }
 
-// Overlay
-GRAPHOBJECTS.push( new FpsOverlay( 300, 460 ));
 
-logInfo( "GRAPHOBJECTS length = " + GRAPHOBJECTS.length );
+/* Overlay objects:
+* - FPS overlay
+*/
+GRAPHOBJECTS.push( new FpsOverlay( CTX, 300, 460 ));
+
+
+/* Start mainLoop */
+console.log( "[Application start] Graphical objects created = " + GRAPHOBJECTS.length );
 
 mainLoop();

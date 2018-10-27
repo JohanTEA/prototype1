@@ -29,7 +29,10 @@ Mine sweeper type game written in Javascript
 *- snyggade till kod
 	- minimerade användning av globala variabler och objekt
 	- justerade objekt vad gäller private/public funktioner så endast nödvändinga delar kan nås utifrån objekten
-- gör Background med bild istället för färg. gräs, liten bild som multiplas (finns funktion i ctx img för detta)
+- gör Background med bild istället för färg.
+	- gräs, liten bild som multiplas (finns funktion i ctx img för detta)
+	- Tar extremt mycket prestanda!!! fixa!
+
 - animera Background (byt bild tre gånger per sekund? eller finns animations funktion?)
 - Lägg in övre rad med:
 	- spelnamn (5 rutor bred)

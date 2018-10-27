@@ -1,12 +1,9 @@
-/* Prototype - Graphical Objects */
+/* Prototype - Game Area Graphical Objects */
 
 /* All graphical objects have the following functions:
 	* this.draw()
 		- draws the object graphics
 		- is called by Main loop each frame
-	* var drawAction()
-		- action performed by object each draw/frame (eg. animation)
-		- is only called by draw() internally in the object
 	* this.clickAction()
 		- action performed by object at click
 		- is called by event listener when a click occurs
@@ -14,51 +11,58 @@
 
 /**
  * Background at x,y with width,height.
+ * Have a green background and animate grass on it
  * @constructor
  */
-function Background(x, y, width, height) { // Object Constructor
+function Background( canvasContext, x, y, width, height ) { // Object Constructor
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	var colour = "#50c878"; // smaragdgrön
 
-	this.draw = function(canvasContext) {
+	var backgroundColour = "#50c878"; // light green
+
+	var spriteImage = new Image(200, 50);
+	spriteImage.src = 'img/grasSprites.png';
+	var frameCount = 0;
+	var spriteImageData = {
+		spritesInImage : 4, // fixed value
+		spriteFps : 4, // fixed value, recomended fps
+		spriteWidth : 50, // fixed value
+		spriteHeight : 50, // fixed value
+		sprite : 0, // moves for each sprite
+		spriteX : function() { return this.sprite * this.spriteWidth; }, // moves for each sprite
+		spriteY : 0, // fixed value, always 0
+		nextSprite : function() {
+			this.sprite++;
+			if ( this.sprite > this.spritesInImage - 1 ) { this.sprite = 0; }
+		}, // rotate sprites, 0-1-2-...-0-1-...
+	}
+	
+
+	this.draw = function() {
 		drawAction();
-		
-		canvasContext.fillStyle = colour;
+
+		// Background colour
+		canvasContext.fillStyle = backgroundColour;
 		canvasContext.fillRect( this.x, this.y, this.width, this.height );
+
+		// Sprites
+		canvasContext.drawImage( spriteImage,
+			 spriteImageData.spriteX(), spriteImageData.spriteY,
+			 spriteImageData.spriteWidth, spriteImageData.spriteHeight,
+			 this.x, this.y,
+			 this.width, this.height );
 	}
 
-	var drawAction = function () {
-		// do nothing
-	}
-
-	this.clickAction = function( clickPosX, clickPosY, play ) {
-		// do nothing
-	}
-};
-
-/**
- * Top menu at x,y with width,height.
- * @constructor
- */
-function Topmenu(x, y, width, height) { // Object Constructor
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	var colour = "#7fffd4"; // aquamarine
-
-	this.draw = function(canvasContext) {
-		drawAction();
+	drawAction = function () {
+		// change to next sprite based on recommended fps, assume screen is running at 60 fsp
+		frameCount++;
+		if ( frameCount > Math.round(60/spriteImageData.spriteFps) ) {
+			spriteImageData.nextSprite();
+			frameCount = 0;
+		}
 		
-		canvasContext.fillStyle = colour;
-		canvasContext.fillRect( this.x, this.y, this.width, this.height );
-	}
-
-	var drawAction = function () {
-		// do nothing
 	}
 
 	this.clickAction = function( clickPosX, clickPosY, play ) {
@@ -72,23 +76,24 @@ function Topmenu(x, y, width, height) { // Object Constructor
  * mine is true || false
  * @constructor
  */
-function Mine(x, y, width, height, mine) { // Object Constructor
+function Mine( canvasContext, x, y, width, height, mine ) { // Object Constructor
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.mine = mine;
+
 	var colour = "#ff00ff"; // purple colour for error indication
 	var state = "unknown";
 	
 	// https://encycolorpedia.se/808080 (grå) https://encycolorpedia.se/cd5c5c (kastanj)- underbar sida med RGB koder för färger
 	// info för bildanvändning: https://www.w3schools.com/tags/canvas_fillstyle.asp
-	this.draw = function(canvasContext) {
+	this.draw = function() {
 		drawAction();
 
 		canvasContext.fillStyle = colour;
 		var rectEdge = 2;
-		canvasContext.fillRect( this.x+rectEdge, this.y+rectEdge, this.width-rectEdge, this.height-rectEdge );
+		canvasContext.fillRect( this.x+rectEdge, this.y+rectEdge, this.width-rectEdge*2, this.height-rectEdge*2 );
 	}
 
 	var drawAction = function () {
@@ -141,38 +146,5 @@ function Mine(x, y, width, height, mine) { // Object Constructor
 		else {
 			return false;
 		}
-	}
-};
-
-/**
- * FPS overlay at x, y.
- * @constructor
- */
-function FpsOverlay(x, y) { // Object Constructor
-	this.x = x;
-	this.y = y;
-	var colour = "#000000"; // svart
-	var frameCounter = 0;
-	var frameShow = 0;
-
-	this.draw = function(canvasContext) {
-		drawAction();
-		
-		canvasContext.font = "11px Arial";
-		canvasContext.fillStyle = colour;
-		canvasContext.fillText( frameShow, this.x, this.y );
-		canvasContext.fillText( frameCounter, this.x, this.y + 10 );
-	}
-
-	var drawAction = function () {
-		// update text each 6 frame => 1/100ms @60fps
-		// check frameShow first so it shows 1-10 instead of 0-9
-		if ( frameShow % 10 == 0 ) { frameShow = 0; }
-		frameCounter++;
-		if ( frameCounter % 6 == 0 ) { frameShow++; }
-	}
-
-	this.clickAction = function( clickPosX, clickPosY, play ) {
-		// do nothing at click
 	}
 };
