@@ -29,15 +29,14 @@ Mine sweeper type game written in Javascript
 *- snyggade till kod
 	- minimerade användning av globala variabler och objekt
 	- justerade objekt vad gäller private/public funktioner så endast nödvändinga delar kan nås utifrån objekten
-- gör Background med bild istället för färg.
-	- gräs, liten bild som multiplas (finns funktion i ctx img för detta)
-	- Tar extremt mycket prestanda!!! fixa!
+*- krånglade runt med prestandaproblem vid visning av bilder och sprite animeringar
+*- la in bild i top-delen, spelnamn
+*- skapade sprite animering för gräs
+- animera gräs på en mindre del av bakgrunden, sedan hela
+- slumpa ut gräs, 70% gräs
 
-- animera Background (byt bild tre gånger per sekund? eller finns animations funktion?)
-- Lägg in övre rad med:
-	- spelnamn (5 rutor bred)
-	- knapp för "starta om" (1 ruta bred)
-	- i-infoknapp (1 ruta bred)
+- Lägg in knapp för "starta om" i top-rad (1 ruta bred)
+- Lägg in knapp för "i" med kugghjul runt, info och konfig (1 ruta bred)
 - gör starta-om funktion
 - visa antal närliggande minor på klickad-ej-mina rutor
 	- skapa array med minor
