@@ -32,6 +32,7 @@ Mine sweeper type game written in Javascript
 *- krånglade runt med prestandaproblem vid visning av bilder och sprite animeringar
 *- la in bild i top-delen, spelnamn
 *- skapade sprite animering för gräs
+- sätt upp EZLint för JavaScript
 - animera gräs på en mindre del av bakgrunden, sedan hela
 - slumpa ut gräs, 70% gräs
 

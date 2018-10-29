@@ -29,7 +29,7 @@ function FpsOverlay( canvasContext, x, y ) { // Object Constructor
 		canvasContext.fillStyle = colour;
 		canvasContext.fillText( frameShow, this.x, this.y );
 		canvasContext.fillText( frameCounter, this.x, this.y + 10 );
-	}
+	};
 
 	var drawAction = function () {
 		// update text each 6 frame => 1/100ms @60fps
@@ -37,9 +37,9 @@ function FpsOverlay( canvasContext, x, y ) { // Object Constructor
 		if ( frameShow % 10 == 0 ) { frameShow = 0; }
 		frameCounter++;
 		if ( frameCounter % 6 == 0 ) { frameShow++; }
-	}
+	};
 
 	this.clickAction = function( clickPosX, clickPosY, play ) {
 		// do nothing at click
-	}
+	};
 };

@@ -83,11 +83,17 @@ GRAPHOBJECTS.push( new Topmenu( CTX, 0, 0, 360, 70 ));
 
 /* Game area:
 * - Game background
+* - Animate gras
 * - Mines
 */
-GRAPHOBJECTS.push( new Background( CTX, 0, 70, C.width, C.height ));
+// Light green background
+GRAPHOBJECTS.push( new BackgroundColour( CTX, "#50c878", 0, 70, C.width, C.height ));
+// Animate gras
+var tussockSprites = new TussockSpriteImage();
+GRAPHOBJECTS.push( new Tussock( CTX, tussockSprites, 0, 70, 50, 50 ));
 
 // Mines
+// TODO: var mineSpriteImage = new MineSpriteImage();
 var mineWidth = 50;
 var mineHeight = 50;
 var minePerRow = 7;
@@ -96,7 +102,8 @@ var minePerColumn = 8;
 var mineColumnOffset = 75; // edge offset to center mines, pixels.
 for ( var mineRow = 0; mineRow < minePerRow; mineRow++ ) {
 	for ( var mineColumn = 0; mineColumn < minePerColumn; mineColumn++ ) {
-   		GRAPHOBJECTS.push(
+		// TODO, add: new MineSpriteData(mineSpriteImage);   
+		GRAPHOBJECTS.push(
 			new Mine(
 				CTX,
 				(mineRow*mineWidth)+mineRowOffset,

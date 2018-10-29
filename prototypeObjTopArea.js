@@ -26,14 +26,14 @@ function Topmenu( canvasContext, x, y, width, height ) { // Object Constructor
 		//drawAction();
 
 		canvasContext.drawImage(image, this.x, this.y, this.width, this.height);
-	}
+	};
 
 	var drawAction = function () {
 		// do nothing
-	}
+	};
 
 	this.clickAction = function( clickPosX, clickPosY, play ) {
 		// do nothing
-	}
+	};
 };
 
